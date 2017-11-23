@@ -31,7 +31,7 @@ namespace KafeYonetim.Sunum.AnaUygulama
                 Console.WriteLine("13. Garson Listele");
                 Console.WriteLine("14. Çalışan Filtrele");
                 Console.WriteLine();
-                ///////////// delil noyan adamın 
+               
                 Console.Write("Bir seçim yapınız (çıkmak için H harfine basınız): ");
                 var secim = Console.ReadLine();
 
@@ -67,7 +67,7 @@ namespace KafeYonetim.Sunum.AnaUygulama
             string metin = Console.ReadLine();
 
             List<Calisan> calisanlar = DataManager.CalisanListesiniIsmeGoreFiltrele(metin);
-
+            
             CalisanListesiniEkranaYazdir(calisanlar);
 
             Console.Read();
@@ -146,7 +146,7 @@ namespace KafeYonetim.Sunum.AnaUygulama
 
                 liste = DataManager.CalisanListesiniGetir(sayfaNumarasi);
             }
-        }23132
+        }
 
         private static int SayfaNumarasiniOku(int toplamSayfaSayisi)
         {

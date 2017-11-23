@@ -8,7 +8,9 @@ namespace KafeYonetim.Data
 
     public class DataManager
     {
-        private static string connStr = "Data Source=DESKTOP-S3O5AOR;Initial Catalog=KafeYonetim;Integrated Security=True";
+
+        public static SqlCommand command;
+        private static string connStr = @"Data Source=NOYAN-LAPTOP\SQLEXPRESS;Initial Catalog=Kafe_Yonetim;Integrated Security=True";
 
         private static SqlConnection CreateConnection()
         {
@@ -34,13 +36,16 @@ namespace KafeYonetim.Data
                 }
             }
         }
+      
+        
 
+        
         public static void KafeAdiniGetir()
         {
             using (var connection = CreateConnection())
             {
 
-                var command = new SqlCommand("SELECT TOP 1 Ad FROM KAfe ", connection);
+               var command = new SqlCommand("SELECT TOP 1 Ad FROM KAfe ", connection);
                 var result = (string)command.ExecuteScalar();
 
                 Console.WriteLine($"Kafe Adı: {result}");
@@ -94,29 +99,39 @@ namespace KafeYonetim.Data
             }
         }
 
+    
+        public static List<Calisan> ListedeOrtakOlanlar(SqlDataReader reader)
+        {
+            using ( reader )
+            {
+                var list = new List<Calisan>();
+
+                while (reader.Read()) // burda var
+                {
+                    var calisan = new Calisan(reader["Isim"].ToString(), (DateTime)reader["IseGirisTarihi"], DataManager.AktifKafeyiGetir());
+
+                    calisan.Gorev.GorevAdi = reader["GorevAdi"].ToString();
+
+                    list.Add(calisan);
+                }
+
+                return list;
+            }
+        }
+
         public static List<Calisan> CalisanListesiniIsmeGoreFiltrele(string metin)
         {
             using (var connection = CreateConnection())
             {
-                var command = new SqlCommand("SELECT Calisan.*, CalisanGorev.GorevAdi FROM Calisan INNER JOIN CalisanGorev ON Calisan.GorevId = CalisanGorev.Id WHERE Calisan.Isim LIKE '%'+@metin+'%'", connection);
+                
+                 command = new SqlCommand("SELECT Calisan.*, CalisanGorev.GorevAdi FROM Calisan INNER JOIN CalisanGorev ON Calisan.GorevId = CalisanGorev.Id WHERE Calisan.Isim LIKE '%'+@metin+'%'", connection);
 
                 command.Parameters.AddWithValue("@metin", metin);
+               
+                return ListedeOrtakOlanlar(command.ExecuteReader());
+                
 
-                using (var reader = command.ExecuteReader())
-                {
-                    var list = new List<Calisan>();
 
-                    while (reader.Read())
-                    {
-                        var calisan = new Calisan(reader["Isim"].ToString(), (DateTime)reader["IseGirisTarihi"], DataManager.AktifKafeyiGetir());
-
-                        calisan.Gorev.GorevAdi = reader["GorevAdi"].ToString();
-
-                        list.Add(calisan);
-                    }
-
-                    return list;
-                }
             }
         }
 
@@ -193,32 +208,19 @@ namespace KafeYonetim.Data
                 return sayfaSayisi;
             }
         }
-
+        
+        
         public static List<Calisan> CalisanListesiniGetir(int sayfaNumarasi =1 , int sayfadakiKayitSayisi = 20)
         {
             using (var connection = CreateConnection())
             {
-                var command = new SqlCommand("SayfaSayisinaGoreCalisanGetir", connection);
+                 command = new SqlCommand("SayfaSayisinaGoreCalisanGetir", connection);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 command.Parameters.AddWithValue("@sayfaNumarasi", sayfaNumarasi);
                 command.Parameters.AddWithValue("@sayfadakiKayitSayisi", sayfadakiKayitSayisi);
 
-                using (var reader = command.ExecuteReader())
-                {
-                    var list = new List<Calisan>();
-
-                    while (reader.Read())
-                    {
-                        var calisan = new Calisan(reader["Isim"].ToString(), (DateTime)reader["IseGirisTarihi"], DataManager.AktifKafeyiGetir());
-
-                        calisan.Gorev.GorevAdi = reader["GorevAdi"].ToString();
-
-                        list.Add(calisan);
-                    }
-
-                    return list;
-                }
+                return ListedeOrtakOlanlar(command.ExecuteReader());
             }
         }
 
