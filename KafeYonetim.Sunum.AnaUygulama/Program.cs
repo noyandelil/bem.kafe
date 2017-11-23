@@ -31,7 +31,7 @@ namespace KafeYonetim.Sunum.AnaUygulama
                 Console.WriteLine("13. Garson Listele");
                 Console.WriteLine("14. Çalışan Filtrele");
                 Console.WriteLine();
-                /////////////
+                ///////////// delil noyan adamın 
                 Console.Write("Bir seçim yapınız (çıkmak için H harfine basınız): ");
                 var secim = Console.ReadLine();
 
