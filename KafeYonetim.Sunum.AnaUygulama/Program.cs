@@ -129,7 +129,7 @@ namespace KafeYonetim.Sunum.AnaUygulama
 
                 liste = DataManager.CalisanListesiniGetir(sayfaNumarasi);
             }
-        }
+        }23132
 
         private static int SayfaNumarasiniOku(int toplamSayfaSayisi)
         {
